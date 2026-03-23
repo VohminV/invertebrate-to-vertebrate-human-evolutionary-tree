@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Полная реализация эволюционного дерева развития от беспозвоночных организмов до позвоночного человека с детальным описанием всех переходных этапов и морфологических изменений.">
+    <title>Эволюционное Дерево Развития От Беспозвоночных К Позвоночному Человеку</title>
+    <style>
+        /* Основные стили документа */
+        :root {
+            --color-background-primary: #ffffff;
+            --color-background-secondary: #f4f4f4;
+            --color-text-primary: #333333;
+            --color-text-secondary: #666666;
+            --color-accent: #2c3e50;
+            --color-border: #dddddd;
+            --font-family-main: "Georgia", "Times New Roman", serif;
+            --font-family-ui: "Arial", "Helvetica", sans-serif;
+            --spacing-unit: 16px;
+        }
+
+        body {
+            font-family: var(--font-family-ui);
+            background-color: var(--color-background-primary);
+            color: var(--color-text-primary);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        /* Заголовок страницы */
+        header.page-header {
+            background-color: var(--color-accent);
+            color: var(--color-background-primary);
+            padding: calc(var(--spacing-unit) * 2);
+            text-align: center;
+            border-bottom: 4px solid #1a252f;
+        }
+
+        header.page-header h1 {
+            font-family: var(--font-family-main);
+            font-size: 2rem;
+            margin: 0;
+            font-weight: normal;
+            letter-spacing: 0.5px;
+        }
+
+        header.page-header p {
+            font-size: 1rem;
+            margin-top: var(--spacing-unit);
+            opacity: 0.9;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Основной контейнер содержимого */
+        main.main-content-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: calc(var(--spacing-unit) * 2);
+        }
+
+        /* Секция визуализации дерева */
+        section.evolutionary-tree-visualization-section {
+            background-color: var(--color-background-secondary);
+            border: 1px solid var(--color-border);
+            padding: calc(var(--spacing-unit) * 2);
+            margin-bottom: calc(var(--spacing-unit) * 2);
+            border-radius: 4px;
+        }
+
+        section.evolutionary-tree-visualization-section h2 {
+            font-family: var(--font-family-main);
+            color: var(--color-accent);
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: var(--spacing-unit);
+            margin-top: 0;
+        }
+
+        /* Контейнер для узлов дерева */
+        div.evolutionary-tree-nodes-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--spacing-unit);
+            margin-top: calc(var(--spacing-unit) * 2);
+            position: relative;
+        }
+
+        /* Линия связи между узлами */
+        div.evolutionary-tree-connection-line {
+            flex-grow: 1;
+            height: 2px;
+            background-color: var(--color-text-secondary);
+            min-width: 50px;
+            position: relative;
+        }
+
+        /* Узел эволюционного этапа */
+        div.evolutionary-stage-node {
+            background-color: var(--color-background-primary);
+            border: 2px solid var(--color-accent);
+            padding: var(--spacing-unit);
+            min-width: 150px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 1;
+        }
+
+        div.evolutionary-stage-node:hover {
+            background-color: var(--color-accent);
+            color: var(--color-background-primary);
+            transform: translateY(-2px);
+        }
+
+        div.evolutionary-stage-node.active {
+            background-color: var(--color-accent);
+            color: var(--color-background-primary);
+            border-color: #1a252f;
+        }
+
+        div.evolutionary-stage-node h3 {
+            margin: 0;
+            font-size: 1rem;
+            font-family: var(--font-family-main);
+        }
+
+        /* Панель информации об этапе */
+        aside.stage-information-panel {
+            background-color: var(--color-background-primary);
+            border: 1px solid var(--color-border);
+            padding: calc(var(--spacing-unit) * 2);
+            margin-top: calc(var(--spacing-unit) * 2);
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        aside.stage-information-panel.visible {
+            display: block;
+        }
+
+        aside.stage-information-panel h3 {
+            font-family: var(--font-family-main);
+            color: var(--color-accent);
+            margin-top: 0;
+        }
+
+        aside.stage-information-panel p {
+            color: var(--color-text-secondary);
+            text-align: justify;
+        }
+
+        aside.stage-information-panel ul {
+            color: var(--color-text-primary);
+        }
+
+        aside.stage-information-panel li {
+            margin-bottom: 8px;
+        }
+
+        /* Подвал страницы */
+        footer.page-footer {
+            background-color: var(--color-accent);
+            color: var(--color-background-primary);
+            text-align: center;
+            padding: var(--spacing-unit);
+            margin-top: calc(var(--spacing-unit) * 4);
+            font-size: 0.9rem;
+        }
+
+        footer.page-footer p {
+            margin: 0;
+        }
+
+        /* Анимация появления */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Адаптивность для мобильных устройств */
+        @media (max-width: 768px) {
+            div.evolutionary-tree-nodes-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            div.evolutionary-tree-connection-line {
+                width: 2px;
+                height: 50px;
+                min-width: 2px;
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="page-header">
+        <h1>Эволюционное Дерево Развития От Беспозвоночных К Позвоночному Человеку</h1>
+        <p>Полная реализация эволюционного дерева развития от беспозвоночных организмов до позвоночного человека с детальным описанием всех переходных этапов и морфологических изменений.</p>
+    </header>
+
+    <main class="main-content-container">
+        <section class="evolutionary-tree-visualization-section">
+            <h2>Визуализация Эволюционного Пути</h2>
+            <p>Выберите этап эволюционного развития для получения подробной информации о морфологических и генетических изменениях.</p>
+            
+            <div class="evolutionary-tree-nodes-container" id="evolutionary-tree-nodes-container">
+                <!-- Узел 1: Беспозвоночные -->
+                <div class="evolutionary-stage-node" data-stage="invertebrate">
+                    <h3>Беспозвоночные</h3>
+                </div>
+                <div class="evolutionary-tree-connection-line"></div>
+
+                <!-- Узел 2: Хордовые -->
+                <div class="evolutionary-stage-node" data-stage="chordate">
+                    <h3>Хордовые</h3>
+                </div>
+                <div class="evolutionary-tree-connection-line"></div>
+
+                <!-- Узел 3: Позвоночные -->
+                <div class="evolutionary-stage-node" data-stage="vertebrate">
+                    <h3>Позвоночные</h3>
+                </div>
+                <div class="evolutionary-tree-connection-line"></div>
+
+                <!-- Узел 4: Млекопитающие -->
+                <div class="evolutionary-stage-node" data-stage="mammal">
+                    <h3>Млекопитающие</h3>
+                </div>
+                <div class="evolutionary-tree-connection-line"></div>
+
+                <!-- Узел 5: Приматы -->
+                <div class="evolutionary-stage-node" data-stage="primate">
+                    <h3>Приматы</h3>
+                </div>
+                <div class="evolutionary-tree-connection-line"></div>
+
+                <!-- Узел 6: Человек Разумный -->
+                <div class="evolutionary-stage-node" data-stage="human">
+                    <h3>Человек Разумный</h3>
+                </div>
+            </div>
+
+            <aside class="stage-information-panel" id="stage-information-panel">
+                <h3 id="stage-title">Заголовок Этапа</h3>
+                <div id="stage-content">
+                    <p>Содержимое этапа будет загружено здесь.</p>
+                </div>
+            </aside>
+        </section>
+
+        <section class="documentation-section">
+            <h2>О Проекте</h2>
+            <p>Данный программный проект предназначен для академического изучения филогенетического древа животного мира. Код написан в соответствии с принципами полной прозрачности и отсутствия сокращений в наименованиях элементов.</p>
+            <p>Все данные основаны на современных научных представлениях о биологической эволюции.</p>
+        </section>
+    </main>
+
+    <footer class="page-footer">
+        <p>Репозиторий: invertebrate-to-vertebrate-human-evolutionary-tree</p>
+        <p>Владелец: Хозяин</p>
+        <p>Все права защищены. Год текущий.</p>
+    </footer>
+
+    <script>
+        // Данные об эволюционных этапах
+        const evolutionaryStagesData = {
+            invertebrate: {
+                title: "Беспозвоночные Животные",
+                content: `
+                    <p>Беспозвоночные представляют собой наиболее древнюю и разнообразную группу животных. Они не имеют внутреннего скелета из позвонков.</p>
+                    <ul>
+                        <li><strong>Период существования:</strong> От кембрийского периода до настоящего времени.</li>
+                        <li><strong>Ключевые особенности:</strong> Отсутствие позвоночного столба, разнообразие форм тела, наличие экзоскелета у членистоногих.</li>
+                        <li><strong>Примеры:</strong> Губки, кишечнополостные, моллюски, членистоногие.</li>
+                    </ul>
+                `
+            },
+            chordate: {
+                title: "Хордовые Животные",
+                content: `
+                    <p>Хордовые — тип животных, характеризующийся наличием осевого скелета в виде хорды хотя бы на одной из стадий развития.</p>
+                    <ul>
+                        <li><strong>Период возникновения:</strong> Кембрийский период.</li>
+                        <li><strong>Ключевые особенности:</strong> Наличие хорды, нервной трубки, жаберных щелей в глотке, постанального хвоста.</li>
+                        <li><strong>Значение:</strong> Предтеча позвоночных животных.</li>
+                    </ul>
+                `
+            },
+            vertebrate: {
+                title: "Позвоночные Животные",
+                content: `
+                    <p>Позвоночные — подтип хордовых животных, у которых хорда заменяется позвоночным столбом в процессе развития.</p>
+                    <ul>
+                        <li><strong>Период возникновения:</strong> Ордовикский период.</li>
+                        <li><strong>Ключевые особенности:</strong> Наличие черепа, позвоночника, развитой центральной нервной системы, замкнутой кровеносной системы.</li>
+                        <li><strong>Классы:</strong> Рыбы, земноводные, пресмыкающиеся, птицы, млекопитающие.</li>
+                    </ul>
+                `
+            },
+            mammal: {
+                title: "Млекопитающие Животные",
+                content: `
+                    <p>Млекопитающие — класс позвоночных животных, основной отличительной чертой которых является вскармливание детенышей молоком.</p>
+                    <ul>
+                        <li><strong>Период возникновения:</strong> Триасовый период.</li>
+                        <li><strong>Ключевые особенности:</strong> Волосяной покров, теплокровность, живорождение (большинство), развитая кора головного мозга.</li>
+                        <li><strong>Эволюционное преимущество:</strong> Высокая выживаемость потомства благодаря заботе о нем.</li>
+                    </ul>
+                `
+            },
+            primate: {
+                title: "Приматы",
+                content: `
+                    <p>Приматы — отряд млекопитающих, включающий лемуров, обезьян и человека. Характеризуются высоким уровнем развития нервной системы.</p>
+                    <ul>
+                        <li><strong>Период возникновения:</strong> Палеоценовый период.</li>
+                        <li><strong>Ключевые особенности:</strong> Пятипалые конечности с ногтями, противопоставленный большой палец, бинокулярное зрение, крупный мозг.</li>
+                        <li><strong>Социальность:</strong> Сложные социальные структуры и коммуникация.</li>
+                    </ul>
+                `
+            },
+            human: {
+                title: "Человек Разумный (Homo Sapiens)",
+                content: `
+                    <p>Человек разумный — единственный современный вид рода Люди. Обладает высокоразвитым мозгом и способностью к членораздельной речи.</p>
+                    <ul>
+                        <li><strong>Период возникновения:</strong> Approximately 300,000 лет назад.</li>
+                        <li><strong>Ключевые особенности:</strong> Абстрактное мышление, создание сложных орудий труда, культура, наука, технология.</li>
+                        <li><strong>Анатомия:</strong> Прямохождение, развитый череп, редукция волосяного покрова.</li>
+                    </ul>
+                `
+            }
+        };
+
+        // Элементы интерфейса
+        const stageNodes = document.querySelectorAll('.evolutionary-stage-node');
+        const informationPanel = document.getElementById('stage-information-panel');
+        const stageTitleElement = document.getElementById('stage-title');
+        const stageContentElement = document.getElementById('stage-content');
+
+        // Функция обработки клика по узлу
+        function handleStageNodeClick(event) {
+            // Удаление активного класса со всех узлов
+            stageNodes.forEach(function(node) {
+                node.classList.remove('active');
+            });
+
+            // Добавление активного класса к текущему узлу
+            const currentNode = event.currentTarget;
+            currentNode.classList.add('active');
+
+            // Получение идентификатора этапа
+            const stageIdentifier = currentNode.getAttribute('data-stage');
+            const stageData = evolutionaryStagesData[stageIdentifier];
+
+            // Обновление содержимого панели информации
+            if (stageData) {
+                stageTitleElement.textContent = stageData.title;
+                stageContentElement.innerHTML = stageData.content;
+                
+                // Показать панель
+                informationPanel.classList.add('visible');
+                
+                // Прокрутка к панели информации для удобства пользователя
+                informationPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        // Назначение обработчиков событий на узлы
+        stageNodes.forEach(function(node) {
+            node.addEventListener('click', handleStageNodeClick);
+        });
+
+        // Инициализация: выбор первого этапа по умолчанию при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstNode = document.querySelector('.evolutionary-stage-node[data-stage="invertebrate"]');
+            if (firstNode) {
+                firstNode.click();
+            }
+        });
+    </script>
+</body>
+</html>
